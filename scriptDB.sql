@@ -38,14 +38,19 @@ DROP TABLE IF EXISTS `equisoft`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `equisoft` (
-  `placa` text,
+  `placa` varchar(6) DEFAULT NULL,
   `vehículo_con_disponibilidad` text,
   `odometro` double(15,2) DEFAULT NULL,
   `accidentes_vs_vehiculo` int(11) DEFAULT NULL,
   `cantidad_repuesto_cambiados` int(11) DEFAULT NULL,
   `cantidad_reparacion_realizada` int(11) DEFAULT NULL,
-  `mantenimientos_realizados` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `mantenimientos_realizados` int(11) DEFAULT NULL,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `equisoft_placa_uk` (`placa`),
+  CONSTRAINT `eq_vh_placa_fk` FOREIGN KEY (`placa`) REFERENCES `vehiculo` (`placa`)
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -85,10 +90,15 @@ CREATE TABLE `hseq` (
   `zona` text,
   `latitud` double(15,8) DEFAULT NULL,
   `longitud` double(15,8) DEFAULT NULL,
-  `placa` text,
+  `placa` varchar(6) DEFAULT NULL,
   `alias` text,
-  `rpm` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `rpm` int(11) DEFAULT NULL,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  KEY `hs_vh_placa_fk` (`placa`),
+  CONSTRAINT `hs_vh_placa_fk` FOREIGN KEY (`placa`) REFERENCES `vehiculo` (`placa`)
+) ENGINE=InnoDB AUTO_INCREMENT=1202 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,10 +144,11 @@ DROP TABLE IF EXISTS `vehiculo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `vehiculo` (
   `vehiculo_id` int(11) NOT NULL,
-  `placa` text,
+  `placa` varchar(6) DEFAULT NULL,
   `modelo` int(11) DEFAULT NULL,
   `referencia` text,
-  PRIMARY KEY (`vehiculo_id`)
+  PRIMARY KEY (`vehiculo_id`),
+  UNIQUE KEY `vehiculo_placa_uk` (`placa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -168,11 +179,16 @@ DROP TABLE IF EXISTS `vehiculo_predictivo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `vehiculo_predictivo` (
-  `placa` text,
+  `placa` varchar(6) DEFAULT NULL,
   `categoria` text,
   `ultima_prediccion` date DEFAULT NULL,
-  `fecha_aplica` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `fecha_aplica` date DEFAULT NULL,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  KEY `vp_vh_placa_fk` (`placa`),
+  CONSTRAINT `vp_vh_placa_fk` FOREIGN KEY (`placa`) REFERENCES `vehiculo` (`placa`)
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -199,7 +215,7 @@ DROP TABLE IF EXISTS `ws`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ws` (
   `cliente` text,
-  `placa` text,
+  `placa` varchar(6) DEFAULT NULL,
   `mes` int(11) DEFAULT NULL,
   `anio` int(11) DEFAULT NULL,
   `conductor` text,
@@ -213,8 +229,13 @@ CREATE TABLE `ws` (
   `promedio_combustible_consumido` double(10,2) DEFAULT NULL,
   `horas_trabajo` int(11) DEFAULT NULL,
   `eventos_panico` int(11) DEFAULT NULL,
-  `evento_bateria_respaldo` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `evento_bateria_respaldo` int(11) DEFAULT NULL,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  KEY `ws_vh_placa_fk` (`placa`),
+  CONSTRAINT `ws_vh_placa_fk` FOREIGN KEY (`placa`) REFERENCES `vehiculo` (`placa`)
+) ENGINE=InnoDB AUTO_INCREMENT=3299 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -244,4 +265,4 @@ CREATE TABLE `ws` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-29 17:03:34
+-- Dump completed on 2018-11-30 15:06:25
