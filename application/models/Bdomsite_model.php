@@ -101,7 +101,9 @@ class Bdomsite_model extends CI_Model {
 			$this->db->insert('vehiculo_predictivo' ,$data);
 		}	
 
+		$this->actualizaFechaRevision();
 	}
+
 
 	function getResultadoVehiculoPredictivo(){
                 $query = $this->db->query("select placa ,vh.modelo ,vh.referencia ,vd.km ,fecha_aplica ,vp.categoria ,vp.ultima_prediccion as ultima from vehiculo_predictivo vp join vehiculo vh using(placa) join vehiculo_desgaste vd using(placa) order by vp.categoria desc ,fecha_aplica ,modelo ");
@@ -136,6 +138,11 @@ class Bdomsite_model extends CI_Model {
                 return $results;
 	}
 
+	function actualizaFechaRevision() {
+		$query = $this->db->query("update vehiculo_predictivo vp join (select placa ,date_add(ultima_prediccion,INTERVAL case when factor > 0.8 then 3 when factor > 0.7 then 5 when factor > 0.6 then 8 when factor > 0.5 then 12 when factor > 0.4 then 15 when factor > 0.3 then 20 when factor > 0.2 then 30 else 45 end DAY) as fecha_aplica from (select placa ,ultima_prediccion ,round((km-odometro)/km,2) as factor from vehiculo_predictivo vp join vehiculo_desgaste vd using(placa) join equisoft eq using(placa) where categoria='PARA_REVISION') c ) d using(placa) set vp.fecha_aplica = d.fecha_aplica");
+
+		return $this->db->affected_rows();
+	}
 }
 
 ?>
